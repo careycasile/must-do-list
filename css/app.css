@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:400,900');
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-size: 16px;
+	font-family: 'Lato', arial, sans-serif;
+	color: #232426;
+	max-width: 1300px;
+	margin:auto;
+}
+
+h1 {
+	font-size: 2.5em;
+	text-align: center;
+	border-bottom: 0.05em solid #232426;
+	padding: 0.3em;
+	margin: 0;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: auto;
+	clear: both;
+}
+
+.item {
+	margin: 0.3em;
+	padding: 0.3em;
+	border: .03em solid #232426;
+	border-radius: 0.3em;
+	width: 18em;
+	cursor: pointer;
+}
+
+.item:active {
+	background-color: #232426;
+	color: white;
+}
+
+.reset-container {
+	width: 100%;
+	display: none;
+	flex-wrap:wrap;
+}
+
+.reset {
+	width: 100%;
+	font-size: 1em;
+	color: black;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: #faff9b;
+	padding: 0;
+	height: 1.7em;
+	border: 0.08em solid #232426;
+}
+
+.reset:active {
+	background-color: #fffffb;
+}
+
+.input-filter {
+	width: 100%;
+	display: flex;
+	flex-wrap:wrap;
+	height: 2em;
+}
+
+.input {
+	font-size: 1em;
+	width: 80%;
+	height: 2em;
+	border: 0.08em solid #232426;
+	padding: 0 0.7em;
+}
+
+.filter {
+	width: 20%;
+	font-size: 1em;
+	color: black;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: #faff9b;
+	padding: 0;
+	height: 2em;
+	border: 0.08em solid #232426;
+}
+
+.filter:active {
+	background-color: #fffffb;
+}
+
+.main {
+	width: 100%;
+	display: flex;
+	flex-wrap:wrap;
+	padding-top: 1em;
+}
+
+.left {
+	width: 30%;
+	min-width: 18em;
+	height: 10em;
+	display: flex;
+	flex-wrap:wrap;
+}
+
+.right {
+	width:70%;
+	position: relative;
+}
+
+#map {
+	height: 35em;
+	width: 100%;
+	overflow: hidden;
+}
+
+@media only screen and (max-width: 1070px) {
+	h1 {
+		font-size: 2em;
+	}
+
+	.right {
+		width: 100%;
+		order: 1;
+		padding-bottom: 0.5em;
+	}
+
+	.left {
+		margin-top: 1em;
+		margin: auto;
+		padding-top: 1em;
+		width: 100%;
+		max-width: 24em;
+		order: 2;
+	}
+
+	.input-filter{
+		padding: 0 0.3em;
+	}
+
+	.input {
+		width: 13em;
+	}
+
+	.filter {
+		width: 3em;
+	}
+
+	#map {
+		height: 25em;
+	}
+
+	ul {
+		margin: 0;
+	}
+}
