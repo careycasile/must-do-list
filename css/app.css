@@ -43,7 +43,7 @@ ul {
 
 .reset-container {
 	width: 100%;
-	display: none;
+	display: flex;
 	flex-wrap:wrap;
 }
 

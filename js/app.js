@@ -174,6 +174,8 @@ var initMap = function() {
 	var ViewModel = function(){
 		'use strict'
 		var self = this;
+		this.filterStatus = ko.observable(true);
+		this.resetStatus = ko.observable(false);
 
 		//All Data items
 		this.fullArray = [];
@@ -195,8 +197,13 @@ var initMap = function() {
 		this.resetClick = function() {
 			'use strict'
 			self.currentArray = self.fullArray.slice(0);
-			$('.reset-container').attr('display', 'hide');
-			$('.input-filter').attr('display', 'flex');
+			self.filterStatus = true;
+			self.resetStatus = false;
+
+			//$('.reset-container').remove();
+			//$('.left').prepend('<div class="input-filter"><input class="input" placeholder="Restaurant, Museum..."><button class="filter" data-bind="click: filterClick">Filter</button></div>');
+			//$('.reset-container').attr('display', 'hide');
+			//$('.input-filter').attr('display', 'flex');
 			console.log('reset clicked');
 		};
 
@@ -205,8 +212,13 @@ var initMap = function() {
 		//button disappear and show reset button
 		this.filterClick = function(){
 			'use strict'
-			$('.reset-container').attr('display', 'flex');
-			$('.input-filter').attr('display', 'hide');
+			self.filterStatus = false;
+			self.resetStatus = true;
+
+			//$('.input-filter').remove();
+			//$('.left').prepend('<div class="reset-container"><button class="reset" data-bind="click: resetClick">Reset</button></div>');
+			//$('.reset-container').attr('display', 'flex');
+			//$('.input-filter').attr('display', 'hide');
 			console.log('filter clicked');
 		};
 	};
