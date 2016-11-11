@@ -1,14 +1,6 @@
 var map;
 
-var initMap = function() {
-	'use strict'
-	map = new google.maps.Map(document.getElementById('map'), {
-		center: {lat: 40.440187, lng: -79.9778809},
-		zoom: 12
-	});
-
-	//MODEL
-	var information = [{
+var information = [{
 		name: 'Kennywood Park',
 		address: '4800 Kennywood Blvd, West Mifflin, PA 15122',
 		lat: 40.3878578,
@@ -145,86 +137,83 @@ var initMap = function() {
 		direction: 236.01
 	}];
 
-	//Class creator to make instances of each data element
-	var InfoItem = function(data) {
-		'use strict'
-		var self = this;
-		this.name = data.name;
-		this.address = data.address;
-		this.lat = data.lat;
-		this.lng = data.lng;
-		this.website = data.website;
-		this.description = data.description;
-		this.icon = data.icon;
-		this.direction = data.direction;
-		//If loop matches a font awesome icon to the item's icon type
-		if (this.icon === 'att') {
-			self.display = '<i class="fa fa-camera" aria-hidden="true"></i>';
-			self.descriptionIcon = 'attraction ' + self.description.toLowerCase();
-		} else if (this.icon === 'food') {
-			self.display = '<i class="fa fa-cutlery" aria-hidden="true"></i>';
-			self.descriptionIcon = 'food restaurant ' + self.description.toLowerCase();			
-		} else if ( this.icon === 'ent') {
-			self.descriptionIcon = 'entertainment fun ' + self.description.toLowerCase();
-			self.display = '<i class="fa fa-users" aria-hidden="true"></i>';
-		} 
-	};
-
-	//VIEWMODEL
-	var ViewModel = function(){
-		'use strict'
-		var self = this;
-		this.filterStatus = ko.observable(true);
-		this.resetStatus = ko.observable(false);
-
-		//All Data items
-		this.fullArray = [];
-		for (var x = 0; x < information.length; x++) {
-			self.fullArray.push(new InfoItem(information[x]));
-		}
-
-		//Data items visible before and after the filter sort
-		this.currentArray = self.fullArray.slice(0);
-
-
-		//TODO item is clicked, google map populates info
-		this.itemClick = function() {
-			'use strict'
-			console.log('item clicked');
-		};
-
-		//TODO Reset is clicked and all data items are visible
-		this.resetClick = function() {
-			'use strict'
-			self.currentArray = self.fullArray.slice(0);
-			self.filterStatus = true;
-			self.resetStatus = false;
-
-			//$('.reset-container').remove();
-			//$('.left').prepend('<div class="input-filter"><input class="input" placeholder="Restaurant, Museum..."><button class="filter" data-bind="click: filterClick">Filter</button></div>');
-			//$('.reset-container').attr('display', 'hide');
-			//$('.input-filter').attr('display', 'flex');
-			console.log('reset clicked');
-		};
-
-
-		//TODO Collect the filter word, iterate over array, filter list, make the filter 
-		//button disappear and show reset button
-		this.filterClick = function(){
-			'use strict'
-			self.filterStatus = false;
-			self.resetStatus = true;
-
-			//$('.input-filter').remove();
-			//$('.left').prepend('<div class="reset-container"><button class="reset" data-bind="click: resetClick">Reset</button></div>');
-			//$('.reset-container').attr('display', 'flex');
-			//$('.input-filter').attr('display', 'hide');
-			console.log('filter clicked');
-		};
-	};
-
-	ko.applyBindings(new ViewModel());
-
+var initMap = function() {
+	'use strict'
+	map = new google.maps.Map(document.getElementById('map'), {
+		center: {lat: 40.440187, lng: -79.9778809},
+		zoom: 12
+	});
 	//TODO create popup windows after side list items are clicked
 
 };
+
+//MODEL
+//Class creator to make instances of each data element
+var InfoItem = function(data) {
+	'use strict'
+	var self = this;
+	this.name = data.name;
+	this.address = data.address;
+	this.lat = data.lat;
+	this.lng = data.lng;
+	this.website = data.website;
+	this.description = data.description;
+	this.icon = data.icon;
+	this.direction = data.direction;
+	this.visible = ko.observable(true);
+	//If loop matches a font awesome icon to the item's icon type
+	if (this.icon === 'att') {
+		self.display = '<i class="fa fa-camera" aria-hidden="true"></i>';
+		self.descriptionIcon = ' attraction ' + self.description.toLowerCase() + ' ' + self.name.toLowerCase();
+	} else if (this.icon === 'food') {
+		self.display = '<i class="fa fa-cutlery" aria-hidden="true"></i>';
+		self.descriptionIcon = ' food restaurant ' + self.description.toLowerCase() + ' ' + self.name.toLowerCase();			
+	} else if ( this.icon === 'ent') {
+		self.descriptionIcon = ' entertainment fun ' + self.description.toLowerCase() + ' ' + self.name.toLowerCase();
+		self.display = '<i class="fa fa-users" aria-hidden="true"></i>';
+	} 
+};
+
+//VIEWMODEL
+var ViewModel = function(){
+	'use strict'
+	var self = this;
+
+	//All Data items
+	this.fullArray = [];
+	for (var x = 0; x < information.length; x++) {
+		self.fullArray.push(new InfoItem(information[x]));
+	}
+
+
+	//TODO item is clicked, google map populates info
+	this.itemClick = function() {
+		'use strict'
+		console.log('item clicked');
+	};
+
+
+
+	//TODO Collect the filter word, iterate over array, filter list, make the filter 
+	//button disappear and show reset button
+	this.userSubmission = ko.observable(' ');
+
+   	this.filterList = ko.computed(function() {
+   		for (var x = 0; x < self.fullArray.length; x++) {
+   			var submission = self.userSubmission();
+   			console.log(submission);
+   			var arrayItem = self.fullArray[x].descriptionIcon.indexOf(submission.toLowerCase());
+   			console.log(self.fullArray[x].descriptionIcon);
+   			console.log(arrayItem);
+   			if (arrayItem !== -1){
+   				self.fullArray[x].visible(true);
+   			} else {
+   				self.fullArray[x].visible(false);
+			}
+   		}
+    });
+
+};
+
+var vm = new ViewModel()
+ko.applyBindings(vm);

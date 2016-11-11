@@ -13,16 +13,12 @@
 		<h1>Pittsburgh Must-Do List</h1>
 		<div class='main'>
 			<div class='left'>
-				<div class="input-filter" data-bind="if: filterStatus">
-					<input class='input' placeholder="Restaurant, Museum...">
-					<button class='filter' data-bind="click: filterClick">Filter</button>
-				</div>
-				<div class="reset-container" data-bind="if: resetStatus">
-					<button class='reset' data-bind="click: resetClick">Reset</button>
+				<div class="input-filter">
+					<input class='input' placeholder="Restaurant, Museum..." data-bind='value: userSubmission, valueUpdate: "keyup"'>
 				</div>
 				<ul>
-			        <div data-bind="foreach: currentArray">
-			                <li class="item" data-bind="click: $parent.itemClick">
+			        <div data-bind="foreach: fullArray">
+			                <li class="item" data-bind="click: $parent.itemClick, visible: visible">
 			                	<span data-bind="html: display"></span>
 			                	<span data-bind='text: name'></span>
 			                </li>
