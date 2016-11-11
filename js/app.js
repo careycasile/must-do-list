@@ -137,13 +137,28 @@ var information = [{
 		direction: 236.01
 	}];
 
-var initMap = function() {
+var InitMap = function() {
 	'use strict'
+	var self = this;
 	map = new google.maps.Map(document.getElementById('map'), {
 		center: {lat: 40.440187, lng: -79.9778809},
-		zoom: 12
+		zoom: 12,
+		styles: [{"elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"color":"#f5f5f2"},{"visibility":"on"}]},{"featureType":"administrative","stylers":[{"visibility":"off"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"poi.attraction","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"visibility":"on"}]},{"featureType":"poi.business","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","stylers":[{"visibility":"off"}]},{"featureType":"poi.place_of_worship","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","stylers":[{"visibility":"off"}]},{"featureType":"poi.sports_complex","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#ffffff"},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"visibility":"simplified"},{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"color":"#ffffff"},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.park","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#71c8d4"}]},{"featureType":"landscape","stylers":[{"color":"#e5e8e7"}]},{"featureType":"poi.park","stylers":[{"color":"#8ba129"}]},{"featureType":"road","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.sports_complex","elementType":"geometry","stylers":[{"color":"#c7c7c7"},{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#a0d3d3"}]},{"featureType":"poi.park","stylers":[{"color":"#91b65d"}]},{"featureType":"poi.park","stylers":[{"gamma":1.51}]},{"featureType":"road.local","stylers":[{"visibility":"off"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"poi.government","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"landscape","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.local","stylers":[{"visibility":"simplified"}]},{"featureType":"road"},{"featureType":"road"},{},{"featureType":"road.highway"}]		
 	});
-	//TODO create popup windows after side list items are clicked
+
+	this.allPins = function() {
+		console.log('all pins fired');
+		for (var x = 0; x < fullArray.length; x++) {
+			var latitude = fullArray[x].lat;
+			var longitude = fullArray[x].lng;
+
+			var marker = new google.maps.Marker({
+			  	position: {lat: latitude , lng: longitude},
+			  	map: map
+			});
+		}
+	};
+	this.allPins();
 
 };
 
@@ -174,46 +189,46 @@ var InfoItem = function(data) {
 	} 
 };
 
+var clicked = function(data){
+	'use strict'
+
+	for (var x = 0; x < fullArray.length; x++) {
+		fullArray[x].setmap(null);
+	}
+};
+
 //VIEWMODEL
+var fullArray = [];
 var ViewModel = function(){
 	'use strict'
 	var self = this;
 
 	//All Data items
-	this.fullArray = [];
-	for (var x = 0; x < information.length; x++) {
-		self.fullArray.push(new InfoItem(information[x]));
-	}
 
+	for (var x = 0; x < information.length; x++) {
+		fullArray.push(new InfoItem(information[x]));
+	}
 
 	//TODO item is clicked, google map populates info
 	this.itemClick = function() {
 		'use strict'
-		console.log('item clicked');
+		clicked(this);
 	};
 
-
-
-	//TODO Collect the filter word, iterate over array, filter list, make the filter 
-	//button disappear and show reset button
-	this.userSubmission = ko.observable(' ');
+	this.userSubmission = ko.observable('');
 
    	this.filterList = ko.computed(function() {
-   		for (var x = 0; x < self.fullArray.length; x++) {
+   		for (var x = 0; x < fullArray.length; x++) {
    			var submission = self.userSubmission();
-   			console.log(submission);
-   			var arrayItem = self.fullArray[x].descriptionIcon.indexOf(submission.toLowerCase());
-   			console.log(self.fullArray[x].descriptionIcon);
-   			console.log(arrayItem);
+   			var arrayItem = fullArray[x].descriptionIcon.indexOf(submission.toLowerCase());
    			if (arrayItem !== -1){
-   				self.fullArray[x].visible(true);
+   				fullArray[x].visible(true);
    			} else {
-   				self.fullArray[x].visible(false);
+   				fullArray[x].visible(false);
 			}
    		}
     });
-
 };
 
-var vm = new ViewModel()
-ko.applyBindings(vm);
+
+ko.applyBindings(new ViewModel());

@@ -36,31 +36,13 @@ ul {
 	cursor: pointer;
 }
 
+.item:hover {
+	background-color: #eee;
+}
+
 .item:active {
 	background-color: #232426;
 	color: white;
-}
-
-.reset-container {
-	width: 100%;
-	display: none;
-	flex-wrap:wrap;
-}
-
-.reset {
-	width: 100%;
-	font-size: 1em;
-	color: black;
-	font-weight: bold;
-	cursor: pointer;
-	background-color: #faff9b;
-	padding: 0;
-	height: 1.7em;
-	border: 0.08em solid #232426;
-}
-
-.reset:active {
-	background-color: #fffffb;
 }
 
 .input-filter {
