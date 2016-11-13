@@ -171,10 +171,15 @@ var MapKeeper = function () {
 			var longitude = vm.fullArray[x].lng;
 			var marker = new google.maps.Marker({
 			  	position: {lat: latitude , lng: longitude},
-			  	//animation: google.maps.Animation.DROP
 			});
 			markerArray.push(marker);
 		}
+	};
+
+	//Recenters the map when one of the knockout computables are changed
+	this.recenter = function() {
+		map.panTo({lat: 40.440187, lng: -79.9778809});
+		map.setZoom(12);
 	};
 
 	//Removes all current pins from the map
@@ -202,9 +207,15 @@ var MapKeeper = function () {
 		markerArray[num].setMap(null);
 	};
 
-
+	//event listener listens if the marker is clicked, then calls pinItem function
+	this.markerClick = function() {
+		
+	};
+	
+	//function is called when an item is clicked from the <li> or a pin is clicked on the map
 	this.pinItem = function(data){
-
+		map.panTo({lat: (data.lat + 0.035), lng: data.lng});
+		map.setZoom(12);
 	};
 };
 
@@ -270,9 +281,11 @@ var ViewModel = function(){
 	   			if (arrayItem !== -1){
 	   				self.fullArray[x].visible(true);
 	   				mk.modifyPinsPlus(x);
+	   				mk.recenter();
 	   			} else {
 	   				self.fullArray[x].visible(false);
 	   				mk.modifyPinsMinus(x);
+	   				mk.recenter();
 				}
 	   		}
 	    });
