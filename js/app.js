@@ -160,6 +160,8 @@ var InitMap = function() {
 
 //The MapKeeper class keeps track of the map elements and works directly with the ViewModel to update as needed
 var MapKeeper = function () {
+	'use strict'
+	var self = this;
 	var markerArray = [];
 
 	//All pins is called once and prepares each item to be placed on the map. This function does not actually 
@@ -167,10 +169,14 @@ var MapKeeper = function () {
 	this.allPins = function() {
 		'use strict'
 		for (var x = 0; x < vm.fullArray.length; x++) {
+			var fullItem = vm.fullArray[x];
 			var latitude = vm.fullArray[x].lat;
 			var longitude = vm.fullArray[x].lng;
 			var marker = new google.maps.Marker({
 			  	position: {lat: latitude , lng: longitude},
+			});
+			marker.addListener('click', function(){
+				mk.pinItem(fullItem);
 			});
 			markerArray.push(marker);
 		}
@@ -178,6 +184,7 @@ var MapKeeper = function () {
 
 	//Recenters the map when one of the knockout computables are changed
 	this.recenter = function() {
+		'use strict'
 		map.panTo({lat: 40.440187, lng: -79.9778809});
 		map.setZoom(12);
 	};
@@ -192,28 +199,36 @@ var MapKeeper = function () {
 
 	//Modifies a pin to show and bounce when selected
 	this.modifyPinsSelect = function(num) {
+		'use strict'
 		markerArray[num].setMap(map);
 		markerArray[num].setAnimation(google.maps.Animation.BOUNCE);
 	};
 
 	//Adds a pin to the map
 	this.modifyPinsPlus = function(num) {
+		'use strict'
 		markerArray[num].setMap(map);
 		markerArray[num].setAnimation(google.maps.Animation.DROP);
 	};
 
 	//removes a pin from the map
 	this.modifyPinsMinus = function(num) {
+		'use strict'
 		markerArray[num].setMap(null);
 	};
 
-	//event listener listens if the marker is clicked, then calls pinItem function
-	this.markerClick = function() {
-		
+	//event listener listens if the marker is clicked, removes all other pins and then calls pinItem function
+	this.markerClick = function(data) {
+		'use strict'
+		pinItem(data);
 	};
-	
-	//function is called when an item is clicked from the <li> or a pin is clicked on the map
+
+	//function is called when an item is clicked from the <li> or a pin is clicked and passed through markerClick
+	//function
 	this.pinItem = function(data){
+		'use strict'
+		self.removePins();
+		self.modifyPinsSelect(data.id);
 		map.panTo({lat: (data.lat + 0.035), lng: data.lng});
 		map.setZoom(12);
 	};
@@ -274,6 +289,7 @@ var ViewModel = function(){
 	this.userSubmission = ko.observable('');
 
    	this.filterList = function(){
+   		'use strict'
    		ko.computed(function() {
 	   		for (var x = 0; x < self.fullArray.length; x++) {
 	   			var submission = self.userSubmission();
