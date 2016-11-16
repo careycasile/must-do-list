@@ -227,18 +227,14 @@ var MapKeeper = function () {
 	//function
 	this.pinItem = function(data, marker){
 		'use strict'
-		var that = this;
 		self.removePins();
 		self.modifyPinsSelect(data.id);
 		map.panTo({lat: (data.lat + 0.035), lng: data.lng});
 		map.setZoom(12);
 
-		var windowContent = '<h2>' + data.name + '</h2><p>' + data.description + '</p>'
+		self.currentInfoWindow(data,marker);
 
-		var infoWindow = new google.maps.InfoWindow({
-			content: windowContent
-		});
-
+/*
 		var closeInfoWindow = function(marker) {
 			infoWindow.close(map, marker)}
 		;
@@ -247,10 +243,34 @@ var MapKeeper = function () {
 			closeInfoWindow();
 		});
 
-		infoWindow.open(map, marker);
+
 
 		$('.input').click(function(){
 			closeInfoWindow(marker);
+		});
+*/
+	};
+
+	this.currentInfoWindow = function(data, marker) {
+		var windowContent = '<h2>' + data.name + '</h2><p>' + data.description + '</p>'
+		var infoWindow = new google.maps.InfoWindow({
+			content: windowContent
+		});
+
+		infoWindow.open(map, marker);
+
+		infoWindow.addListener('closeclick', function(){
+			infoWindow.close(map, marker)
+		});
+
+		$('.input').click(function(){
+			alert('input clicked');
+			infoWindow.close(map, marker)
+		});
+
+		$('li').click(function(){
+			alert('lis clicked');
+			infoWindow.close(map, marker)
 		});
 	};
 };
