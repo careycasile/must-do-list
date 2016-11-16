@@ -162,24 +162,30 @@ var InitMap = function() {
 var MapKeeper = function () {
 	'use strict'
 	var self = this;
-	var markerArray = [];
+	this.markerArray = [];
 
 	//All pins is called once and prepares each item to be placed on the map. This function does not actually 
 	//place the items as that is taken care of in the modifyPins... functions.
 	this.allPins = function() {
 		'use strict'
+		//var largInfoWindow = new google.maps.InfoWindow();
+
+		//for loop pins all markers to the map and adds a listener to each marker. function runs
 		for (var x = 0; x < vm.fullArray.length; x++) {
-			var fullItem = vm.fullArray[x];
-			var latitude = vm.fullArray[x].lat;
-			var longitude = vm.fullArray[x].lng;
-			var marker = new google.maps.Marker({
-			  	position: {lat: latitude , lng: longitude},
-			});
-			marker.addListener('click', function(){
-				mk.pinItem(fullItem);
-			});
-			markerArray.push(marker);
-		}
+			(function(){
+				var fullItem = vm.fullArray[x];
+				var latitude = vm.fullArray[x].lat;
+				var longitude = vm.fullArray[x].lng;
+				var marker = new google.maps.Marker({
+				  	position: {lat: latitude , lng: longitude},
+				});
+				
+				//adds listener to the marker, when clicked, sends the marker info to the pinItem function
+				marker.addListener('click', function(){
+					self.pinItem(fullItem, marker);
+				});
+				self.markerArray.push(marker);
+		})()}
 	};
 
 	//Recenters the map when one of the knockout computables are changed
@@ -192,45 +198,60 @@ var MapKeeper = function () {
 	//Removes all current pins from the map
 	this.removePins = function() {
 		'use strict'
-		for (var x = 0; x < markerArray.length; x++){
-				markerArray[x].setMap(null);
+		for (var x = 0; x < self.markerArray.length; x++){
+				self.markerArray[x].setMap(null);
 		}
 	};
 
 	//Modifies a pin to show and bounce when selected
 	this.modifyPinsSelect = function(num) {
 		'use strict'
-		markerArray[num].setMap(map);
-		markerArray[num].setAnimation(google.maps.Animation.BOUNCE);
+		self.markerArray[num].setMap(map);
+		self.markerArray[num].setAnimation(google.maps.Animation.BOUNCE);
 	};
 
 	//Adds a pin to the map
 	this.modifyPinsPlus = function(num) {
 		'use strict'
-		markerArray[num].setMap(map);
-		markerArray[num].setAnimation(google.maps.Animation.DROP);
+		self.markerArray[num].setMap(map);
+		self.markerArray[num].setAnimation(google.maps.Animation.DROP);
 	};
 
 	//removes a pin from the map
 	this.modifyPinsMinus = function(num) {
 		'use strict'
-		markerArray[num].setMap(null);
-	};
-
-	//event listener listens if the marker is clicked, removes all other pins and then calls pinItem function
-	this.markerClick = function(data) {
-		'use strict'
-		pinItem(data);
+		self.markerArray[num].setMap(null);
 	};
 
 	//function is called when an item is clicked from the <li> or a pin is clicked and passed through markerClick
 	//function
-	this.pinItem = function(data){
+	this.pinItem = function(data, marker){
 		'use strict'
+		var that = this;
 		self.removePins();
 		self.modifyPinsSelect(data.id);
 		map.panTo({lat: (data.lat + 0.035), lng: data.lng});
 		map.setZoom(12);
+
+		var windowContent = '<h2>' + data.name + '</h2><p>' + data.description + '</p>'
+
+		var infoWindow = new google.maps.InfoWindow({
+			content: windowContent
+		});
+
+		var closeInfoWindow = function(marker) {
+			infoWindow.close(map, marker)}
+		;
+
+		infoWindow.addListener('closeclick', function(){
+			closeInfoWindow();
+		});
+
+		infoWindow.open(map, marker);
+
+		$('.input').click(function(){
+			closeInfoWindow(marker);
+		});
 	};
 };
 
@@ -283,11 +304,12 @@ var ViewModel = function(){
 		'use strict'
 		mk.removePins();
 		mk.modifyPinsSelect(this.id);
-		mk.pinItem(this);
+		mk.pinItem(this, mk.markerArray[this.id]);
 	};
 
+	//Knockout observable monitors what the user types in and the ko.computed funciton updates the pins and
+	//visibile property of the object
 	this.userSubmission = ko.observable('');
-
    	this.filterList = function(){
    		'use strict'
    		ko.computed(function() {
