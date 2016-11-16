@@ -48,7 +48,7 @@ ul {
 .input-filter {
 	width: 100%;
 	display: flex;
-	flex-wrap:wrap;
+	flex-wrap: wrap;
 	height: 2em;
 }
 
@@ -86,6 +86,20 @@ ul {
 	overflow: hidden;
 }
 
+.info-container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.info-image {
+	width: 30%;
+}
+
+.info-desc {
+	width: 70%;
+	padding: 1em;
+}
+
 @media only screen and (max-width: 1070px) {
 	h1 {
 		font-size: 2em;
@@ -108,6 +122,16 @@ ul {
 
 	#map {
 		height: 25em;
+	}
+
+	.info-image {
+		width: 200px;
+		margin: auto;
+	}
+
+	.info-desc {
+		width: 100%;
+		padding: 0.5em;
 	}
 
 	ul {
