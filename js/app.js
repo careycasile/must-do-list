@@ -214,14 +214,6 @@ var MapKeeper = function () {
 			})()}
 	};
 
-/*
-
-
-https://github.com/bettiolo/oauth-signature-js
-
-
-*/
-
 	//Recenters the map when one of the knockout computables are changed
 	this.recenter = function() {
 		'use strict'
