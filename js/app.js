@@ -189,7 +189,7 @@ var MapKeeper = function () {
 				var panorama = 'https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + fullItem.lat + ',' + fullItem.lng + '&fov=90&heading=' + fullItem.direction + '&pitch=20&key=AIzaSyCD_6f-GSSpKCE4Dq849hfXY0yCp16Y0i4'
 
 				//FB add share button
-				//var placeFB = fbAdd(fullItem.website);
+				var placeFB = fbAdd(fullItem.website);
 
 				//creates a new info window for each marker
 				var windowContent = '<div class="info-container"><div class="info-image"><img src="' + panorama +  '"></div><div class="info-desc"><h2>' + fullItem.name + '</h2><p>' + fullItem.description + '</p>' + fullItem.address + '<br>' + '<a href="http://' + fullItem.website + '" target="_blank">' + fullItem.website + '</a></p></div></div>';
