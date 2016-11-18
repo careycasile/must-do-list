@@ -11,14 +11,22 @@
 
 	<body>
 		<script>
-		$(document).ready(function() {
 		  window.fbAsyncInit = function() {
 		    FB.init({
 		      appId      : '1228292267242595',
 		      xfbml      : true,
 		      version    : 'v2.8'
 		    });
-		    FB.AppEvents.logPageView();
+
+		    var fbAdd = function(site) {
+			    FB.ui(
+					{
+						method: 'share',
+						href: site
+				}, function(response){});
+			}
+			console.log(fbAdd(www.cnn.com));
+			$('body').append(fbAdd(www.cnn.com));
 		  };
 
 		  (function(d, s, id){
@@ -28,7 +36,6 @@
 		     js.src = "//connect.facebook.net/en_US/sdk.js";
 		     fjs.parentNode.insertBefore(js, fjs);
 		   }(document, 'script', 'facebook-jssdk'));
-		});
 		</script>
 
 		<h1><i class="fa fa-camera" aria-hidden="true"></i>&nbsp;Pittsburgh Must-Do List</h1>
