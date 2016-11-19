@@ -18,17 +18,16 @@
 				version    : 'v2.8'
 				});
 				FB.AppEvents.logPageView();
-
-
-				FB.getLoginStatus(function(response) {
-					if (response.status === 'connected') {
-						console.log('FB is connected');
-					} else {
-						console.log('FB is not connected');
-					}
-				});
+				console.log('FB init fired');
 			};
 
+			FB.getLoginStatus(function(response) {
+				if (response.status === 'connected') {
+					console.log('FB is connected');
+				} else {
+					console.log('FB is not connected');
+				}
+			});
 
 			(function(d, s, id){
 			var js, fjs = d.getElementsByTagName(s)[0];
