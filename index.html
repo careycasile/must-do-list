@@ -10,33 +10,43 @@
 	</head>
 
 	<body>
-		<script>
-			window.fbAsyncInit = function() {
-				FB.init({
-				appId      : '1228292267242595',
-				xfbml      : true,
-				version    : 'v2.8'
-				});
-				FB.AppEvents.logPageView();
-				console.log('FB init fired');
-			};
 
-			FB.getLoginStatus(function(response) {
-				if (response.status === 'connected') {
-					console.log('FB is connected');
-				} else {
-					console.log('FB is not connected');
+	<script async defer>
+		//This Script tag is called from mk.modifyPinSelect and it calls for a list of wikipedia articles
+		//which are displayed inside the info window
+		var callFun = function(num) {
+			var numberOf = num;
+			var search = vm.fullArray[num].name
+			var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + search + '&format=json&callback=wikiCallback';
+
+			$.ajax({
+				url: wikiUrl,
+				dataType: 'jsonp',
+				success: function(response){
+					var articleList = response[1];
+					console.log(articleList);
+					var articleStr = null;
+					for (var x = 0; x < articleList.length; x++) {
+						articleStr = articleList[x];
+
+						url = 'http://en.wikipedia.org/wiki/' + articleStr;	
+
+						var tempLi = '<li class="wikiItem"><a href="' + url + '">' + articleStr + '</a></li>';
+						$('.wiki' + numberOf).append(tempLi);
+					}
+
+					if (articleStr === null) {
+						var tempLi = '<li class="wikiItem">No Wikipedia Entries For This Location</li>';
+						$('.wiki' + numberOf).append(tempLi);
+					}
 				}
-			});
+			}).fail(function(response){
+					var tempLi = '<li class="wikiItem">Wikipedia Failed To Connect</li>';
+					$('.wiki' + numberOf).append(tempLi);
+				});
+		}
+	</script>
 
-			(function(d, s, id){
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id)) {return;}
-			js = d.createElement(s); js.id = id;
-			js.src = "//connect.facebook.net/en_US/sdk.js";
-			fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facebook-jssdk'));
-		</script>
 		<h1><i class="fa fa-camera" aria-hidden="true"></i>&nbsp;Pittsburgh Must-Do List</h1>
 		<div class='main'>
 			<div class='left'>
