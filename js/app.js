@@ -2,6 +2,14 @@
 var map;
 var bounds;
 
+window.onresize = function () {
+    map.fitBounds(bounds);
+};
+
+var mapError = function () {
+    $('#map').append('<h2 class="page-fail">Google Maps Failed To Load, Please Reload Page</h2>');
+};
+
 //Initial Data is placed inside objects inside an array
 var information = [{
     name: 'Kennywood Park',
@@ -141,7 +149,7 @@ var information = [{
 }];
 
 //InitMap function is called from the index.html file towards the bottom inside the googleapis.com... src script tag
-var InitMap = function () {
+var initMap = function () {
     'use strict';
     var self = this;
     //The map is drawn on the page here
@@ -370,6 +378,7 @@ var MapKeeper = function () {
     var self = this;
     this.markerArray = [];
     this.markerInfoArray = [];
+    this.markerInfoArrayOriginal = [];
 
     //All pins is called once and prepares each item to be placed on the map. This function does not actually 
     //place the items as that is taken care of in the modifyPins... functions.
@@ -393,7 +402,7 @@ var MapKeeper = function () {
                 var panorama = 'https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + fullItem.lat + ',' + fullItem.lng + '&fov=90&heading=' + fullItem.direction + '&pitch=20&key=AIzaSyCD_6f-GSSpKCE4Dq849hfXY0yCp16Y0i4';
 
                 //creates a new info window for each marker
-                var windowContent = '<div class="info-container"><div class="info-image"><img src="' + panorama + '"></div><div class="info-desc"><h2>' + fullItem.name + '</h2><p>' + fullItem.description + '</p>' + fullItem.address + '<br>' + '<a href="http://' + fullItem.website + '" target="_blank">' + fullItem.website + '</a></p></div><div><h3>Wikipedia Reference:</h3><ul class="wiki' + fullItem.id + '"></ul></div></div>';
+                var windowContent = '<div class="info-container"><div class="info-image"><img src="' + panorama + '"></div><div class="info-desc"><h2>' + fullItem.name + '</h2><p>' + fullItem.description + '</p>' + fullItem.address + '<br>' + '<a href="http://' + fullItem.website + '" target="_blank">' + fullItem.website + '</a></p></div><div><h3>Wikipedia References:</h3><ul class="wiki' + fullItem.id + '"></ul></div></div>';
 
                 var infoWindow = new google.maps.InfoWindow({
                     content: windowContent
@@ -418,6 +427,7 @@ var MapKeeper = function () {
                 map.fitBounds(bounds);
             })();
         }
+        self.markerInfoArrayOriginal = self.markerInfoArray.slice();
     };
 
     //Recenters the map when one of the knockout computables are changed
@@ -434,7 +444,8 @@ var MapKeeper = function () {
         for (var x = 0; x < self.markerArray.length; x++) {
             self.markerInfoArray[x].close(map, self.markerArray[x]);
             self.markerArray[x].setMap(null);
-            $('.wikiItem').remove();
+            var tempInfo = self.markerInfoArrayOriginal[x].content;
+            self.markerInfoArray[x].setContent(tempInfo);
         }
     };
 
@@ -520,7 +531,6 @@ var ViewModel = function () {
     //TODO item is clicked, google map populates info
     this.itemClick = function () {
         mk.removePins();
-        mk.modifyPinsSelect(this.id);
         mk.pinItem(this, mk.markerArray[this.id]);
     };
 
