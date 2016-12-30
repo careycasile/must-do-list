@@ -402,7 +402,7 @@ var MapKeeper = function () {
                 var panorama = 'https://maps.googleapis.com/maps/api/streetview?size=200x200&location=' + fullItem.lat + ',' + fullItem.lng + '&fov=90&heading=' + fullItem.direction + '&pitch=20&key=AIzaSyCD_6f-GSSpKCE4Dq849hfXY0yCp16Y0i4';
 
                 //creates a new info window for each marker
-                var windowContent = '<div class="info-container"><div class="info-image"><img src="' + panorama + '"></div><div class="info-desc"><h2>' + fullItem.name + '</h2><p>' + fullItem.description + '</p>' + fullItem.address + '<br>' + '<a href="http://' + fullItem.website + '" target="_blank">' + fullItem.website + '</a></p></div><div><h3>Wikipedia References:</h3><ul class="wiki' + fullItem.id + '"></ul></div></div>';
+                var windowContent = '<div class="info-container"><div class="info-image"><img src="' + panorama + '"></div><div class="info-desc"><h2>' + fullItem.name + '</h2><p>' + fullItem.description + '</p>' + fullItem.address + '<br>' + '<a href="http://' + fullItem.website + '" target="_blank">' + fullItem.website + '</a></p></div></div>';
 
                 var infoWindow = new google.maps.InfoWindow({
                     content: windowContent
@@ -454,9 +454,6 @@ var MapKeeper = function () {
         self.markerArray[num].setMap(map);
         self.markerArray[num].setAnimation(google.maps.Animation.BOUNCE);
         self.markerInfoArray[num].open(map, self.markerArray[num]);
-
-        //Calls the wikipedia function
-        callFun(num);
     };
 
     //Adds a pin to the map
